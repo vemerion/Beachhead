@@ -1,0 +1,8 @@
+{
+  "generator.beachhead": "Beachhead",
+  "item.beachhead.scroll": "Scroll",
+  "entity.beachhead.beachhead_albatross_entity": "Albatross",
+  "entity.beachhead.beachhead_crab_entity": "Crab",
+  "entity.beachhead.beachhead_turtle_entity": "Turtle",
+  "entity.beachhead.scroll_projectile_entity": "Scroll Projectile"
+}

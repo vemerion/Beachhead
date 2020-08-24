@@ -1,0 +1,38 @@
+{
+  "bird1_sound": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "beachhead:bird1_sound",
+        "stream": false
+      }
+    ]
+  },
+  "bird2_sound": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "beachhead:bird2_sound",
+        "stream": false
+      }
+    ]
+  },
+  "projectile_impact_sound": {
+    "category": "players",
+    "sounds": [
+      {
+        "name": "beachhead:projectile_impact_sound",
+        "stream": false
+      }
+    ]
+  },
+  "projectile_launch_sound": {
+    "category": "players",
+    "sounds": [
+      {
+        "name": "beachhead:projectile_launch_sound",
+        "stream": false
+      }
+    ]
+  }
+}  
