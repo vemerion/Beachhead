@@ -96,10 +96,10 @@ public class ClientForgeEventSubscriber {
 					// Draw Nola
 					BufferBuilder builder = Tessellator.getInstance().getBuffer();
 					builder.begin(7, DefaultVertexFormats.POSITION_TEX);
-					builder.pos(x, y + 32, 94).tex(0, 1).endVertex();
-					builder.pos(x + 192, y + 32, 94).tex(1, 1).endVertex();
-					builder.pos(x + 192, y, 94).tex(1, 0).endVertex();
-					builder.pos(x, y, 94).tex(0, 0).endVertex();
+					builder.pos(x, y + 32, -5).tex(0, 1).endVertex();
+					builder.pos(x + 192, y + 32, -5).tex(1, 1).endVertex();
+					builder.pos(x + 192, y, -5).tex(1, 0).endVertex();
+					builder.pos(x, y, -5).tex(0, 0).endVertex();
 					builder.finishDrawing();
 					RenderSystem.enableAlphaTest();
 					RenderSystem.enableBlend();

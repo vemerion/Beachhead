@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Random;
 
 import mod.vemerion.beachhead.capability.BeachheadGame;
+import mod.vemerion.beachhead.capability.BeachheadGameMessage;
 import mod.vemerion.beachhead.capability.BeachheadGameProvider;
 import mod.vemerion.beachhead.entities.BeachheadAlbatrossEntity;
 import mod.vemerion.beachhead.entities.BeachheadCrabEntity;
@@ -26,10 +27,13 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.TickEvent.PlayerTickEvent;
 import net.minecraftforge.event.TickEvent.WorldTickEvent;
+import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
+import net.minecraftforge.eventbus.api.Event.Result;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.network.PacketDistributor;
 
 @EventBusSubscriber(modid = Beachhead.MODID, bus = EventBusSubscriber.Bus.FORGE)
 public class ForgeEventSubscriber {
@@ -39,6 +43,13 @@ public class ForgeEventSubscriber {
 	@SubscribeEvent
 	public static void attachCapability(AttachCapabilitiesEvent<World> event) {
 		event.addCapability(BEACHHEADGAME_CAP, new BeachheadGameProvider());
+	}
+
+	@SubscribeEvent
+	public static void preventMobSpawn(LivingSpawnEvent.CheckSpawn event) {
+		if (event.getWorld().getWorld().getWorldType() instanceof BeachheadWorldType) {
+			event.setResult(Result.DENY);
+		}
 	}
 
 	@SubscribeEvent
@@ -92,6 +103,10 @@ public class ForgeEventSubscriber {
 		World world = player.world;
 		if (world.getWorldType() instanceof BeachheadWorldType) {
 			player.addItemStackToInventory(new ItemStack(Beachhead.SCROLL));
+			BeachheadGame game = world.getCapability(Beachhead.BEACHHEADGAME_CAP)
+					.orElseThrow(() -> new IllegalArgumentException("LazyOptional cannot be empty!"));
+			BeachheadGameMessage.INSTANCE.send(PacketDistributor.ALL.noArg(), new BeachheadGameMessage(game.getScore(),
+					game.getTurtleMadeItTimer(), game.getTurtleMadeItTimer()));
 			addSand(world);
 			addPlants(world);
 		}
@@ -127,11 +142,16 @@ public class ForgeEventSubscriber {
 
 	@SubscribeEvent
 	public static void updatePlayerPositionAndRotation(PlayerTickEvent event) {
-		if (event.player.world.getWorldType() instanceof BeachheadWorldType && event.phase == Phase.END) {
+		if (event.player.world.getWorldType() instanceof BeachheadWorldType) {
 			PlayerEntity player = event.player;
 			float pitch = MathHelper.clamp(player.rotationPitch, -40, 90);
 			float yaw = MathHelper.clamp(player.rotationYaw, -90, 90);
-			player.setPositionAndRotation(0.5, 6, 0.5, yaw, pitch);
+			player.setPositionAndRotation(0.5, 6.2, 0.5, yaw, pitch);
+			player.prevPosX = player.getPosX();
+			player.prevPosY = player.getPosY();
+			player.prevPosZ = player.getPosZ();
+			player.prevRotationPitch = player.rotationPitch;
+			player.prevRotationYaw = player.rotationYaw;
 		}
 	}
 
